@@ -81,7 +81,7 @@ int jitc_compile(const char *input, const char *output) {
 struct jitc *jitc_open(const char *pathname) {
     /* Allocate memory for the jitc struct */
     struct jitc *soModuleHandle = (struct jitc *)malloc(sizeof(struct jitc));
-    soModuleHandle->handle = dlopen(pathname, RTLD_LAZY | RTLD_LOCAL); /*  to reference to symbols (like functions or variables) until they are actually needed at runtime. */
+    soModuleHandle->handle = dlopen(pathname, RTLD_LAZY ); /*  to reference to symbols (like functions or variables) until they are actually needed at runtime. */
     
     if (!soModuleHandle) {
         free(soModuleHandle); 

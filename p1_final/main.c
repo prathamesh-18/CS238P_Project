@@ -11,9 +11,10 @@
 #include "parser.h"
 #include "system.h"
 #include "math.h"
+#include "stdio.h"
 
 /* export LD_LIBRARY_PATH=. */
-/* // Sigmoid function implementation */
+/* Sigmoid function implementation */
 double sigmoid(double x) {
     return 1.0 / (1.0 + exp(-x));
 
@@ -77,20 +78,21 @@ generate(const struct parser_dag *dag, FILE *file)
 {
 
 	fprintf(file, "#include <stdio.h>\n");
-	fprintf(file, "double evaluate(void) {\n");
+	fprintf(file, "double* evaluate(void) {\n");
 	reflect(dag, file);
+	fprintf(file,"static double values[2];\n");
 	fprintf(file, "\n double expression_value = t%d;\n", dag->id);
+	fprintf(file,"values[0]=t%d;\n", dag->id);
 	fprintf(file, "printf(\"Value of the given expression is: \");\n");
 	fprintf(file, "printf(\"%%f\\n\", expression_value);\n");
-	
 	fprintf(file, "double (*sigmoid)(double) = (double (*)(double))%p;\n", (void *)sigmoid);
-
-
-	fprintf(file,"return sigmoid(%d);\n",dag->id);
+/* 	fprintf(file,"return sigmoid(%d);\n",dag->id); */
+	fprintf(file,"values[1]= sigmoid(%d);\n",dag->id);
+	fprintf(file,"return values;\n");
 	fprintf(file, "}\n");
 }
 
-typedef double (*evaluate_t)(void);
+typedef double* (*evaluate_t)(void);
 
 int
 main(int argc, char *argv[])
@@ -101,6 +103,7 @@ main(int argc, char *argv[])
 	struct jitc *jitc;
 	evaluate_t fnc;
 	FILE *file;
+	double *answer;
 
 	/* usage */
 
@@ -122,20 +125,22 @@ main(int argc, char *argv[])
 		TRACE("fopen()");
 		return -1;
 	}
-	printf("Hi");
 	generate(parser_dag(parser), file);
 	parser_close(parser);
 	fclose(file);
-			printf("abcd");
+	
+
 
 	/* JIT compile */
-	printf("Starting jitc compilation");
+	printf("Starting jitc compilation\n");
 	if (jitc_compile(CFILE, SOFILE)) {
-		/*file_delete(CFILE);*/
+		file_delete(CFILE); 
 		TRACE(0);
 		return -1;
-	}
-	/*file_delete(CFILE);*/
+	}/* 
+	file_delete(CFILE); */
+
+
 
 	/* dynamic load */
 
@@ -146,7 +151,9 @@ main(int argc, char *argv[])
 		TRACE(0);
 		return -1;
 	}
-	printf("%f\n", fnc());
+	
+	answer=fnc();
+	printf("The sigmoid value of %f is: %f\n", answer[0],answer[1]);
 
 	/* done */
 
