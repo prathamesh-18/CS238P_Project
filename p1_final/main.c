@@ -10,8 +10,14 @@
 #include "jitc.h"
 #include "parser.h"
 #include "system.h"
+#include "math.h"
 
 /* export LD_LIBRARY_PATH=. */
+/* // Sigmoid function implementation */
+double sigmoid(double x) {
+    return 1.0 / (1.0 + exp(-x));
+
+}
 
 static void
 reflect(const struct parser_dag *dag, FILE *file)
@@ -69,18 +75,19 @@ reflect(const struct parser_dag *dag, FILE *file)
 static void
 generate(const struct parser_dag *dag, FILE *file)
 {
-	fprintf(file, "#include <math.h>\n");
+
 	fprintf(file, "#include <stdio.h>\n");
-	fprintf(file, "double sigmoid(double x) {\n");
-	fprintf(file, "return 1.0 / (1.0 + exp(-x));\n");
-	fprintf(file, "}\n");
 	fprintf(file, "double evaluate(void) {\n");
 	reflect(dag, file);
-	fprintf(file, "\n double sigmoid_value = sigmoid(t%d);\n", dag->id);
-	fprintf(file, "printf(\"  Sigmoid Value of the Result of your given expression is:\");\n");
-	fprintf(file, "printf(\"%%f\\n\", sigmoid_value);\n");
-	fprintf(file, "return t%d;\n}\n", dag->id);
+	fprintf(file, "\n double expression_value = t%d;\n", dag->id);
+	fprintf(file, "printf(\"Value of the given expression is: \");\n");
+	fprintf(file, "printf(\"%%f\\n\", expression_value);\n");
 	
+	fprintf(file, "double (*sigmoid)(double) = (double (*)(double))%p;\n", (void *)sigmoid);
+
+
+	fprintf(file,"return sigmoid(%d);\n",dag->id);
+	fprintf(file, "}\n");
 }
 
 typedef double (*evaluate_t)(void);
@@ -147,3 +154,5 @@ main(int argc, char *argv[])
 	jitc_close(jitc);
 	return 0;
 }
+
+
