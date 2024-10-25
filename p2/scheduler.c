@@ -118,13 +118,13 @@ void schedule(void) {
     }
 
     if (candidate->status == STATUS_) {
-        uint64_t esp = (uint64_t) candidate->stack.memory + SZ_STACK; // Set the stack pointer to the top of the candidate's stack
+        uint64_t esp = (uint64_t) candidate->stack.memory + SZ_STACK; 
 
 __asm__ volatile (
-    "mov %0, %%esp" // Move the esp value to the esp register
-    : // No output
-    : "r"(esp) // Input: esp value
-    : "%esp" // Clobber the esp register
+    "mov %0, %%esp" 
+    : 
+    : "r"(esp) 
+    : "%esp" 
 );
 
 
