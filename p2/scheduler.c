@@ -118,14 +118,13 @@ void schedule(void) {
     }
 
     if (candidate->status == STATUS_) {
-        uint64_t esp = (uint64_t) candidate->stack.memory + SZ_STACK; 
-
-__asm__ volatile (
-    "mov %0, %%esp" 
-    : 
-    : "r"(esp) 
-    : "%esp" 
-);
+    uint64_t rsp = (uint64_t) candidate->stack.memory + SZ_STACK;
+    __asm__ volatile (
+        "mov %0, %%rsp"
+        : 
+        : "r"(rsp)
+        : 
+    );
 
 
         candidate->status = STATUS_RUNNING;
