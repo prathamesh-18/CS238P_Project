@@ -91,16 +91,6 @@ struct jitc *jitc_open(const char *pathname) {
     return soModuleHandle; 
 }
 
-void jitc_close(struct jitc *jitc) {
-    if (jitc != NULL) {
-        /* Close the dynamic module handle and free the allocated memory */
-        dlclose(jitc->handle); /* Close the shared object */
-        free(jitc); 
-        return; 
-    } else {
-        EXIT("The out.so file handle did not close properly");
-    }
-}
 
 long jitc_lookup(struct jitc *jitc, const char *symbol) {
 
@@ -111,4 +101,16 @@ long jitc_lookup(struct jitc *jitc, const char *symbol) {
     }
     
     return (long)symbol_address; 
+}
+
+
+void jitc_close(struct jitc *jitc) {
+    if (jitc != NULL) {
+        /* Close the dynamic module handle and free the allocated memory */
+        dlclose(jitc->handle); /* Close the shared object */
+        free(jitc); 
+        return; 
+    } else {
+        EXIT("The out.so file handle did not close properly");
+    }
 }

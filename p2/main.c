@@ -19,8 +19,8 @@ _thread_(void *arg)
 	name = (const char *)arg;
 	for (i=0; i<100; ++i) {
 		printf("%s %d\n", name, i);
-		us_sleep(20000);
-		scheduler_yield();
+		us_sleep(40000);
+		/*scheduler_yield(14); */
 	}
 }
 

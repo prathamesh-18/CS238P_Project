@@ -86,7 +86,6 @@ generate(const struct parser_dag *dag, FILE *file)
 	fprintf(file, "printf(\"Value of the given expression is: \");\n");
 	fprintf(file, "printf(\"%%f\\n\", expression_value);\n");
 	fprintf(file, "double (*sigmoid)(double) = (double (*)(double))%p;\n", (void *)sigmoid);
-/* 	fprintf(file,"return sigmoid(%d);\n",dag->id); */
 	fprintf(file,"values[1]= sigmoid(%d);\n",dag->id);
 	fprintf(file,"return values;\n");
 	fprintf(file, "}\n");
@@ -137,8 +136,8 @@ main(int argc, char *argv[])
 		file_delete(CFILE); 
 		TRACE(0);
 		return -1;
-	}/* 
-	file_delete(CFILE); */
+	}
+	file_delete(CFILE); 
 
 
 
