@@ -160,6 +160,9 @@ void destroy(void) {
 /* For automatic yielding */
 
 void start_timer(void) {
+    if (SIG_ERR == signal(SIGALRM, scheduler_yield)) {
+        perror("Error setting signal");
+    }
     alarm(1);
 }
 
@@ -171,9 +174,7 @@ void stop_timer(void) {
 }
 
 void scheduler_execute(void) {
-    if (SIG_ERR == signal(SIGALRM, scheduler_yield)) {
-        perror("Error setting signal");
-    }
+    
     setjmp(scheduler.env);
     start_timer();
     schedule();
