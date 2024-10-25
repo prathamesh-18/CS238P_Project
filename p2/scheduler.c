@@ -53,7 +53,6 @@ struct thread *thread_candidate(void) {
     struct thread *curr = scheduler.current;
     do {
         if (curr->status != STATUS_TERMINATED) {
-            /* scheduler.current = curr->next;   */
             return curr;
         }
         curr = curr->next;
@@ -119,8 +118,15 @@ void schedule(void) {
     }
 
     if (candidate->status == STATUS_) {
-        uint64_t rsp = (uint64_t) candidate->stack.memory + SZ_STACK;
-        __asm__ volatile ("mov sp, %0" : : "r"(rsp));
+        uint32_t esp = (uint32_t) candidate->stack.memory + SZ_STACK; // Set the stack pointer to the top of the candidate's stack
+
+__asm__ volatile (
+    "mov %0, %%esp" // Move the esp value to the esp register
+    : // No output
+    : "r"(esp) // Input: esp value
+    : "%esp" // Clobber the esp register
+);
+
 
         candidate->status = STATUS_RUNNING;
         printf("\n -----------Initializing thread -> %s-----------\n", (const char *) candidate->arg);
@@ -155,7 +161,6 @@ void destroy(void) {
 /* For automatic yielding */
 
 void start_timer(void) {
-    
     alarm(1);
 }
 
