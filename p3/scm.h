@@ -16,7 +16,7 @@ struct scm;
 
 /**
  * Initializes an SCM region using the file specified in pathname as the
- * backing device, opening the region for memory allocation activities.
+ * backing device, opening the regsion for memory allocation activities.
  *
  * pathname: the file pathname of the backing device
  * truncate: if non-zero, truncates the SCM region, clearning all data
@@ -75,7 +75,7 @@ void scm_free(struct scm *scm, void *p);
  * return: the number of bytes utilized thus far
  */
 
-size_t scm_utilized(const struct scm *scm);
+size_t scm_size(const struct scm *scm);
 
 /**
  * Returns the number of SCM bytes available in total.
@@ -85,7 +85,7 @@ size_t scm_utilized(const struct scm *scm);
  * return: the number of bytes available in total
  */
 
-size_t scm_capacity(const struct scm *scm);
+size_t scm_length(const struct scm *scm);
 
 /**
  * Returns the base memory address withn the SCM region, i.e., the memory
@@ -97,6 +97,6 @@ size_t scm_capacity(const struct scm *scm);
  * return: the base memory address within the SCM region
  */
 
-void *scm_mbase(struct scm *scm);
+void *scm_memory_base(struct scm *scm);
 
 #endif /* _SCM_H_ */

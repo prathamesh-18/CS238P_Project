@@ -22,6 +22,8 @@ void avl_close(struct avl *avl);
 
 int avl_insert(struct avl *avl, const char *item);
 
+int avl_remove(struct avl *avl, const char *item);
+
 uint64_t avl_exists(const struct avl *avl, const char *item);
 
 void avl_traverse(const struct avl *avl, avl_fnc_t fnc, void *arg);
@@ -30,8 +32,8 @@ uint64_t avl_items(const struct avl *avl);
 
 uint64_t avl_unique(const struct avl *avl);
 
-size_t avl_scm_utilized(const struct avl *avl);
+size_t avl_scm_size(const struct avl *avl);
 
-size_t avl_scm_capacity(const struct avl *avl);
+size_t avl_scm_length(const struct avl *avl);
 
 #endif /* _AVL_H_ */
