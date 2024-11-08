@@ -261,3 +261,86 @@ avl_scm_capacity(const struct avl *avl)
 
 	return scm_capacity(avl->scm);
 }
+
+static struct node *find_inorder_successor(struct node *node) {
+    while (node->left) {
+        node = node->left;
+    }
+    return node;
+}
+
+static struct node *remove_inorder_successor(struct node *node) {
+    if (!node->left) {
+        return node->right;
+    }
+    node->left = remove_inorder_successor(node->left);
+    if (abs(balance(node)) > 1) {
+        node = (balance(node->right) > 0) ? rotate_right_left(node) : rotate_left(node);
+    }
+    node->depth = depth(node->left, node->right);
+    return node;
+}
+
+static struct node *remove_node(struct avl *avl, struct node *node, const char *item) {
+    int comparison;
+
+    if (!node) {
+        return NULL;
+    }
+    
+    comparison = strcmp(item, node->item);
+    if (!comparison) {
+        struct node *successor;
+        
+        if (node->count > 1) {
+            node->count-=1;
+            avl->state->items-=1;
+            return node;
+        }
+        
+        if (!node->left || !node->right) {
+            struct node *child = node->left ? node->left : node->right;
+            scm_free(avl->scm, (void *) node->item);
+            scm_free(avl->scm, node);
+            avl->state->items-=1;
+            avl->state->unique-=1;
+            return child;
+        }
+        
+        successor = find_inorder_successor(node->right);
+        node->item = scm_strdup(avl->scm, successor->item);
+        if (!node->item) {
+            perror("Error duplicating string");
+            return NULL;
+        }
+        node->count = successor->count;
+        node->right = remove_inorder_successor(node->right);
+        scm_free(avl->scm, (void *) successor->item);
+        scm_free(avl->scm, successor);
+        avl->state->items-=1;
+        avl->state->unique-=1;
+        
+    } else if (comparison < 0) {
+        node->left = remove_node(avl, node->left, item);
+    } else {
+        node->right = remove_node(avl, node->right, item);
+    }
+
+    if (abs(balance(node)) > 1) {
+        node = (balance(node->right) > 0) ? rotate_right_left(node) : rotate_left(node);
+    }
+    node->depth = depth(node->left, node->right);
+    return node;
+}
+
+int avl_remove(struct avl *avl, const char *item) {
+    assert(avl && safe_strlen(item));
+
+    if (!avl->state->root) {
+        perror("AVL tree is empty");
+        return -1;
+    }
+
+    avl->state->root = remove_node(avl, avl->state->root, item);
+    return 0;
+}

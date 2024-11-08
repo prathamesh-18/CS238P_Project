@@ -118,14 +118,13 @@ void schedule(void) {
     }
 
     if (candidate->status == STATUS_) {
-    uint64_t rsp = (uint64_t) candidate->stack.memory + SZ_STACK;
-    __asm__ volatile (
-        "mov %0, %%rsp"
-        : 
-        : "r"(rsp)
-        : 
-    );
-
+        uint64_t rsp = (uint64_t) candidate->stack.memory + SZ_STACK;
+        __asm__ volatile (
+            "mov sp, %0"  
+            : 
+            : "r"(rsp)    
+            : "memory"    
+        );
 
         candidate->status = STATUS_RUNNING;
         printf("\n -----------Initializing thread -> %s-----------\n", (const char *) candidate->arg);

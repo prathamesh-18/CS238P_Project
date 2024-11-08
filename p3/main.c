@@ -34,6 +34,18 @@ insert(struct avl *avl, const char *s)
 	return 0;
 }
 
+static int remove_item(struct avl *avl, const char *str) {
+    if (!avl_exists(avl, str)) {
+        perror("Entry does not exist");
+        return 0;
+    }
+
+    if (avl_remove(avl, str)) {
+        perror("Failed to remove entry");
+    }
+    return 0;
+}
+
 static int
 load(struct avl *avl, const char *s)
 {
@@ -133,6 +145,7 @@ shell_fnc(void *arg, const char *s)
 		{ 0, "list", list },
 		{ 1, "load", load },
 		{ 1, "insert", insert },
+		{ 1, "remove", remove_item },
 		{ 1, "exists", exists }
 	};
 	struct avl *avl;
