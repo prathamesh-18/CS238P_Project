@@ -15,6 +15,7 @@
 #include <sys/stat.h>
 #include <unistd.h>
 #include <fcntl.h>
+#include <linux/fs.h> 
 #include "device.h"
 
 /**
