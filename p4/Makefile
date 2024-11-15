@@ -1,23 +1,16 @@
-#
-# Tony Givargis
-# Copyright (C), 2023-2024
-# University of California, Irvine
-#
-# CS 238P - Operating Systems
-# Makefile
-#
+CC      = gcc
+CFLAGS  = -ansi -pedantic -Wall -Wextra -Werror -Wfatal-errors -fpic -O3
+LDLIBS  = -lpthread
+DEST    = cs238
+SRCS    = device.c logfs.c kvraw.c main.c utils.c  # Add all source files here
+OBJS    := $(SRCS:.c=.o)
+DEPS    := $(OBJS:.o=.d)
 
-CC     = gcc
-CFLAGS = -ansi -pedantic -Wall -Wextra -Werror -Wfatal-errors -fpic -O3
-LDLIBS = -lpthread
-DEST   = cs238
-SRCS := device.c logfs.c kvraw.c main.c utils.c
-OBJS := $(SRCS:.c=.o)
+all: $(DEST)
 
-
-all: $(OBJS)
-	@echo "[LN]" $(DEST)
-	@$(CC) -o $(DEST) $(OBJS) $(LDLIBS)
+$(DEST): $(OBJS)
+	@echo "[LN]" $@
+	@$(CC) -o $@ $(OBJS) $(LDLIBS)
 
 %.o: %.c
 	@echo "[CC]" $<
@@ -25,6 +18,6 @@ all: $(OBJS)
 	@$(CC) $(CFLAGS) -MM $< > $*.d
 
 clean:
-	@rm -f $(DEST) *.so *.o *.d *~ *#
+	@rm -f $(DEST) *.so *.o *.d *~
 
--include $(OBJS:.o=.d)
+-include $(DEPS)
