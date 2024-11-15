@@ -11,8 +11,9 @@ CC     = gcc
 CFLAGS = -ansi -pedantic -Wall -Wextra -Werror -Wfatal-errors -fpic -O3
 LDLIBS = -lpthread
 DEST   = cs238
-SRCS  := $(wildcard *.c)
-OBJS  := $(SRCS:.c=.o)
+SRCS := device.c logfs.c kvraw.c main.c utils.c
+OBJS := $(SRCS:.c=.o)
+
 
 all: $(OBJS)
 	@echo "[LN]" $(DEST)
