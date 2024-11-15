@@ -13,7 +13,6 @@
 #include <sys/types.h>
 #include <sys/file.h>
 #include <sys/stat.h>
-#include <linux/fs.h>
 #include <unistd.h>
 #include <fcntl.h>
 #include "device.h"
