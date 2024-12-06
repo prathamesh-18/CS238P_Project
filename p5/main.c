@@ -151,6 +151,33 @@ void disk_stats(char *disk) {
     fclose(disk_file);
 }
 
+void time_plus_stats(void) {
+    const char *const PROC_STAT = "/proc/stat";
+    FILE *stat_file;
+    char line[1024];
+    unsigned long long user_time, system_time, idle_time;
+    unsigned long long total_time;
+    double cpu_time;
+
+    if (!(stat_file = fopen(PROC_STAT, "r"))) {
+        TRACE("fopen() - CPU Time+");
+        return;
+    }
+
+    if (fgets(line, sizeof(line), stat_file)) {
+        // Reading the "cpu" line
+        sscanf(line, "cpu %llu %*u %llu %llu", &user_time, &system_time, &idle_time);
+
+        // Calculate total CPU time
+        total_time = user_time + system_time + idle_time;
+        cpu_time = (double) total_time / (double) sysconf(_SC_CLK_TCK); // Convert clock ticks to seconds
+
+        printf(" | Total CPU Time (TIME+): %5.2f seconds", cpu_time);
+    }
+
+    fclose(stat_file);
+}
+
 int main(int argc, char *argv[]) {
     const char *const PROC_STAT = "/proc/stat";
 
@@ -179,6 +206,7 @@ int main(int argc, char *argv[]) {
         memory_stats();
         network_stats("eth0:");
         disk_stats("sda");
+		time_plus_stats();
 
         us_sleep(500000);
     }
