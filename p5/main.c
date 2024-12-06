@@ -225,8 +225,8 @@ int main(int argc, char *argv[]) {
         fclose(file);
 
         memory_stats();
-        network_stats("eth0:");
-        disk_stats("sda");
+/*         network_stats("eth0:");
+ */        disk_stats("sda");
 		time_plus_stats();
 
 /*         us_sleep(500000);
