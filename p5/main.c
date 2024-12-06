@@ -168,7 +168,7 @@ void time_plus_stats(void) {
 
     if (fgets(line, sizeof(line), stat_file)) {
 
-        sscanf(line, "cpu %llu %*u %llu %llu", &user_time, &system_time, &idle_time);
+        sscanf(line, "cpu %lu %*u %lu %lu", &user_time, &system_time, &idle_time);
 
    
         total_time = user_time + system_time + idle_time;
