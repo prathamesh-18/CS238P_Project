@@ -174,7 +174,7 @@ void time_plus_stats(void) {
 
    
         total_time = user_time + system_time + idle_time;
-        cpu_time = (double) total_time / (double) sscanf(_SC_CLK_TCK); 
+        cpu_time = (double) total_time / (double) sysconf(_SC_CLK_TCK); 
 
         printf(" | Total CPU Time (TIME+): %5.2f seconds", cpu_time);
     }
