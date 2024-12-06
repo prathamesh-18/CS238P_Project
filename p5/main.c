@@ -157,8 +157,8 @@ void time_plus_stats(void) {
     const char *const PROC_STAT = "/proc/stat";
     FILE *stat_file;
     char line[1024];
-    unsigned long long user_time, system_time, idle_time;
-    unsigned long long total_time;
+    unsigned long  user_time, system_time, idle_time;
+    unsigned long  total_time;
     double cpu_time;
 
     if (!(stat_file = fopen(PROC_STAT, "r"))) {
