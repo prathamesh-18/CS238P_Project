@@ -213,8 +213,8 @@ int main(int argc, char *argv[]) {
         return -1;
     }
 
-/*     while (!done) {
- */        if (!(file = fopen(PROC_STAT, "r"))) {
+     while (!done) {
+         if (!(file = fopen(PROC_STAT, "r"))) {
             TRACE("fopen() - CPU");
             return -1;
         }
@@ -229,9 +229,9 @@ int main(int argc, char *argv[]) {
  */        disk_stats("sda");
 		time_plus_stats();
 
-/*         us_sleep(500000);
- *//*    }  */
+        us_sleep(500000);
+   }  
 
-    printf("\rDone!                                                                                            \n");
+    printf("\rDone!\n");
     return 0;
 }
