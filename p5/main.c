@@ -167,12 +167,12 @@ void time_plus_stats(void) {
     }
 
     if (fgets(line, sizeof(line), stat_file)) {
-        // Reading the "cpu" line
+
         sscanf(line, "cpu %llu %*u %llu %llu", &user_time, &system_time, &idle_time);
 
-        // Calculate total CPU time
+   
         total_time = user_time + system_time + idle_time;
-        cpu_time = (double) total_time / (double) sysconf(_SC_CLK_TCK); // Convert clock ticks to seconds
+        cpu_time = (double) total_time / (double) sysconf(_SC_CLK_TCK); 
 
         printf(" | Total CPU Time (TIME+): %5.2f seconds", cpu_time);
     }
