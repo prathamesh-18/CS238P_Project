@@ -108,13 +108,15 @@ void network_stats(char *interface) {
             return;
         }
     }
-
+	printf("Lasan");
     while (fgets(line, sizeof(line), net_file)) {
         char iface[32];
         unsigned long recv, send;
 
         if (sscanf(line, "%s %lu %*u %*u %*u %*u %*u %*u %*u %lu", iface, &recv, &send) == 3) {
+			printf("1\n");
             if (strcmp(iface, interface) == 0) {
+				printf("2\n");
                 printf(" | %s Receive: %lu bytes | %s Send: %lu bytes", interface, recv, interface, send);
                 break;
             }
