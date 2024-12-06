@@ -9,6 +9,8 @@
 
 #include <signal.h>
 #include "system.h"
+#include <unistd.h>
+
 
 /**
  * Needs:
