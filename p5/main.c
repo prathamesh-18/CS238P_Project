@@ -123,11 +123,12 @@ void network_stats(char *interface) {
         }
     }
 
-    printf("Reading network statistics...\n");
+    printf("Reading...\n");
 
     while (fgets(line, sizeof(line), net_file)) {
         char iface[32];
         unsigned long recv, send;
+		printf("Loda");
 
         if (sscanf(line, "%31[^:]: %lu %*u %*u %*u %*u %*u %*u %*u %lu", iface, &recv, &send) == 2) {
             trim_spaces(iface);
@@ -228,8 +229,8 @@ int main(int argc, char *argv[]) {
         disk_stats("sda");
 		time_plus_stats();
 
-        us_sleep(500000);
-/*    }  */
+/*         us_sleep(500000);
+ *//*    }  */
 
     printf("\rDone!                                                                                            \n");
     return 0;
