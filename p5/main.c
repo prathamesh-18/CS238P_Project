@@ -142,10 +142,6 @@ void network_stats(char *interface) {
     }
 
     fclose(net_file);
-
-    if (feof(net_file)) {
-        printf("Interface %s not found.\n", interface);
-    }
 }
 
 void disk_stats(char *disk) {
