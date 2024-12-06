@@ -92,6 +92,18 @@ void memory_stats(void) {
     printf(" | Memory Used Percentage: %5.1f%%", (double) (mem_total - mem_free) / (double) mem_total * 100);
 }
 
+void trim_spaces(char *str) {
+    char *start = str;
+    char *end = str + strlen(str) - 1;
+
+    while (*start == ' ') start++;
+    while (end > start && *end == ' ') end--;
+    *(end + 1) = '\0';
+    if (start != str) {
+        memmove(str, start, end - start + 2);
+    }
+}
+
 void network_stats(char *interface) {
     const char *const PROC_NET_DEV = "/proc/net/dev";
     FILE *net_file;
@@ -110,22 +122,30 @@ void network_stats(char *interface) {
             return;
         }
     }
-	printf("Lasan");
+
+    printf("Reading network statistics...\n");
+
     while (fgets(line, sizeof(line), net_file)) {
         char iface[32];
         unsigned long recv, send;
 
-        if (sscanf(line, "%s %lu %*u %*u %*u %*u %*u %*u %*u %lu", iface, &recv, &send) == 3) {
-			printf("1\n");
+        if (sscanf(line, "%31[^:]: %lu %*u %*u %*u %*u %*u %*u %*u %lu", iface, &recv, &send) == 2) {
+            trim_spaces(iface);
+            printf("Checking interface: '%s' against '%s'\n", iface, interface);
+
             if (strcmp(iface, interface) == 0) {
-				printf("2\n");
-                printf(" | %s Receive: %lu bytes | %s Send: %lu bytes", interface, recv, interface, send);
+                printf("Match found!\n");
+                printf(" | %s Receive: %lu bytes | %s Send: %lu bytes\n", iface, recv, iface, send);
                 break;
             }
         }
     }
 
     fclose(net_file);
+
+    if (feof(net_file)) {
+        printf("Interface %s not found.\n", interface);
+    }
 }
 
 void disk_stats(char *disk) {
